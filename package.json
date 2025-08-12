@@ -1,0 +1,53 @@
+{
+  "name": "n8n-nodes-smartcache",
+  "version": "0.0.1",
+  "description": "N8N community node for intelligent caching with automatic hash generation and TTL support",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "cache",
+    "performance",
+    "workflow",
+    "automation"
+  ],
+  "license": "MPL-2.0",
+  "homepage": "https://github.com/skadaai/n8n-nodes-smartcache",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skadaai/n8n-nodes-smartcache.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && npm run copy",
+    "copy": "mkdir -p dist/nodes/SmartCache && cp nodes/SmartCache/*.svg dist/nodes/SmartCache/",
+    "dev": "tsc --watch",
+    "format": "prettier nodes --write",
+    "lint": "eslint nodes --ext .ts",
+    "lintfix": "eslint nodes --ext .ts --fix",
+    "prepublishOnly": "npm run build && npm run lint"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "nodes": [
+      "dist/nodes/SmartCache/SmartCache.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^6.21.0",
+    "copyfiles": "^2.4.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-n8n-nodes-base": "^1.16.1",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "engines": {
+    "node": ">=18.10",
+    "pnpm": ">=8.15"
+  }
+}

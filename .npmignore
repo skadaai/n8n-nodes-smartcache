@@ -1,0 +1,32 @@
+# Source files
+nodes/
+credentials/
+tsconfig.json
+.eslintrc.js
+
+# Development files
+.gitignore
+.vscode/
+.idea/
+
+# Documentation that shouldn't be in the package
+README.md
+LICENSE
+
+# Tests and examples (if any)
+test/
+tests/
+examples/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Cache and logs
+*.log
+.eslintcache
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
