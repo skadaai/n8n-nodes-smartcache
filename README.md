@@ -52,7 +52,7 @@ graph LR
 ```
 
 ### 🖼️ Media Generation & Processing  
-**Problem**: Imagen-4 costs $0.06-0.08 per image. Veo3 costs much more. Stable Diffusion API costs add up.  
+**Problem**: Imagen-4 costs $0.06-0.08 per image. Veo3 starts at $4 per call. Stable Diffusion API costs add up.  
 **Solution**: Cache generated media, avoid regenerating identical prompts.
 
 ### 📄 Document Processing
@@ -62,10 +62,6 @@ graph LR
 ### 🌐 External API Calls
 **Problem**: Third-party APIs have rate limits and costs per request.  
 **Solution**: Cache API responses, reduce external dependencies.
-
-### 🎵 Media Processing
-**Problem**: Audio/video processing is CPU-intensive and time-consuming.  
-**Solution**: Cache processed media, skip redundant operations.
 
 ## 📊 Performance Impact
 
