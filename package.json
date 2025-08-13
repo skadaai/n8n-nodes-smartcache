@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-smartcache",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "N8N community node for intelligent caching with automatic hash generation and TTL support",
   "keywords": [
     "n8n-community-node-package",
@@ -16,7 +16,7 @@
     "type": "git",
     "url": "https://github.com/skadaai/n8n-nodes-smartcache.git"
   },
-  "main": "index.js",
+  "main": "dist/nodes/SmartCache/SmartCache.node.js",
   "scripts": {
     "build": "tsc && pnpm run copy",
     "copy": "mkdir -p dist/nodes/SmartCache && cp nodes/SmartCache/*.svg dist/nodes/SmartCache/",
@@ -27,8 +27,7 @@
     "prepublishOnly": "pnpm run build && pnpm run lint"
   },
   "files": [
-    "dist",
-    "index.js"
+    "dist"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
@@ -39,7 +38,6 @@
   "devDependencies": {
     "@types/node": "^24.2.1",
     "@typescript-eslint/parser": "^6.21.0",
-    "copyfiles": "^2.4.1",
     "eslint": "^8.56.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.1",
     "prettier": "^3.2.5",

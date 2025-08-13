@@ -206,7 +206,7 @@ const processSingleItem = async (
   }
 }
 
-export default class SmartCacheNode implements INodeType {
+export class SmartCache implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'Smart Cache',
     name: 'smartCache',
