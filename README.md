@@ -103,7 +103,16 @@ graph TD
 
 ## 📥 Installation
 
-### For self-hosted n8n installations:
+### [Within n8n using the GUI](https://docs.n8n.io/integrations/community-nodes/installation/gui-install/):
+
+1. Go to **Settings > Community Nodes**.
+2. Select **Install**.
+3. Enter `n8n-nodes-smartcache` in the `npm package name` field.
+4. Agree to the risks of using community nodes.
+5. Select **Install**.
+
+
+### [For self-hosted n8n installations](https://docs.n8n.io/integrations/community-nodes/installation/manual-install/):
 
 ```bash
 npm install n8n-nodes-smartcache
@@ -301,7 +310,7 @@ Mozilla Public License 2.0 - see [LICENSE](LICENSE) file for details.
 
 ## 🔗 Related
 
-- [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
+- [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/installation/)
 
 ---
 
