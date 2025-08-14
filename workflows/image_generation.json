@@ -1,0 +1,120 @@
+{
+  "name": "Image Generation",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-304, -240],
+      "id": "f0fc5a4c-a8df-4533-a1b6-2d49af01c94e"
+    },
+    {
+      "parameters": {
+        "cacheKeyFields": "prompt,style",
+        "ttl": 0,
+        "cacheDir": "/tmp/n8n-cache/images"
+      },
+      "name": "SmartCache",
+      "type": "n8n-nodes-smartcache.smartCache",
+      "typeVersion": 1,
+      "position": [-112, -224],
+      "id": "c2046b29-916e-488c-bbfe-4aaff29ccd86"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json.prompt }}\n\nStyle: {{ $json.style }}",
+        "options": {}
+      },
+      "name": "Generate Image with DALL-E",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [80, -112],
+      "id": "810be487-8904-4d4f-a7a7-b7d452cab9de",
+      "credentials": {
+        "openAiApi": {
+          "id": "kvDydoq2Remusm9B",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Final Result",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [224, -224],
+      "id": "508e82c9-e6f9-4f78-9264-3f7a6ad1c88e"
+    }
+  ],
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "prompt": "A cute cat astronaut on the moon, digital art",
+          "style": "vivid"
+        }
+      },
+      {
+        "json": {
+          "prompt": "A photorealistic image of a futuristic city skyline at sunset",
+          "style": "natural"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "SmartCache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SmartCache": {
+      "main": [
+        [
+          {
+            "node": "Final Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Image with DALL-E",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image with DALL-E": {
+      "main": [
+        [
+          {
+            "node": "SmartCache",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f3699e56-74d3-4a22-b9ab-a8c48289f856",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3220869e13eb48e3b75906b6c7047b653dc50ec0815ebf8e5d8a10f74072c08e"
+  },
+  "id": "lpjnl6TNpHfYZICG",
+  "tags": []
+}

@@ -133,89 +133,85 @@ This node is not yet verified for n8n Cloud. Please use a self-hosted n8n instan
 
 ## 📚 Usage Examples
 
-### Basic Caching Pattern
+Below are practical, complete examples that you can import directly into n8n. These examples use only built-in n8n nodes.
 
-The most common pattern with SmartCache:
+### Example 1: Caching LLM Text Summarization
 
-1. Connect your data source to the **Input** port
-2. Connect **Cache Miss** output to your expensive operation (API calls, processing, etc.)
-3. Connect the result of your expensive operation to the **Write** input
-4. Connect **Cache Hit** output to your final destination
-5. Connect **Write** output to your final destination
+**Scenario**: You have text articles that you need to summarize using an LLM. Since LLM calls are expensive and deterministic, caching the results for identical texts saves money and speeds up reruns.
+
+**Logic**:
+1.  **Sample Articles**: A `Code` node provides the input text. In a real workflow, this could be an RSS feed, an API call, or a database query.
+2.  **SmartCache (Check)**: The node generates a hash from the `article` field and checks if a cached result exists.
+3.  **Cache Miss**: If the text is new, it's sent to the OpenAI node for summarization.
+4.  **SmartCache (Write)**: The summary from OpenAI is passed to the `Write` input of the SmartCache node and saved.
+5.  **Cache Hit**: If the text has been summarized before, the result is returned instantly from the cache.
 
 ```mermaid
 graph LR
-    A[Data Source] --> B[SmartCache Input]
-    B -->|Cache Miss| C[Expensive Operation<br/>LLM/API/Processing]
-    B -->|Cache Hit| D[Final Output<br/>⚡ Instant]
-    C --> E[SmartCache Write]
-    E --> D
+    A[Input Text] --> B(SmartCache);
+    B -->|Miss| C{Summarize w/ LLM};
+    C --> D(SmartCache Write);
+    B -->|Hit| E(Final Result);
+    D --> E;
 ```
 
-### Example 1: LLM Article Processing
+[▶️ Download Workflow File](workflows/text_summarization.json)
 
-**Scenario**: Processing scientific articles with GPT-5 for narrative generation.
+![Text Summarization Workflow](https://raw.githubusercontent.com/skadaai/n8n-nodes-smartcache/main/workflows/text_summarization.png)
 
-```json
-{
-  "name": "Article Processing Cache",
-  "type": "n8n-nodes-smartcache.smartCache",
-  "parameters": {
-    "cacheDir": "/tmp/article-cache",
-    "ttl": 168,
-    "cacheKeyFields": "guid,title,content"
-  }
-}
+---
+
+### Example 2: Caching Image Generation
+
+**Scenario**: You are generating images using DALL-E based on specific prompts and styles. Re-running the same prompt should not cost you another API credit or take extra time.
+
+**Logic**:
+1.  **Image Prompts**: A `Code` node provides a list of prompts and styles.
+2.  **SmartCache (Check)**: The node generates a hash from the combination of the `prompt` and `style` fields to uniquely identify each image request.
+3.  **Cache Miss**: If this prompt/style combination is new, it's sent to the OpenAI DALL-E node.
+4.  **SmartCache (Write)**: The generated image data from OpenAI is saved to the cache.
+5.  **Cache Hit**: If an identical prompt/style is requested again, the cached image is returned instantly.
+
+```mermaid
+graph LR
+    A[Input Prompts] --> B(SmartCache);
+    B -->|Miss| C{Generate Image w/ DALL-E};
+    C --> D(SmartCache Write);
+    B -->|Hit| E(Final Result);
+    D --> E;
 ```
 
-**Flow**:
-1. Articles → SmartCache → Cache miss → GPT-5 processing ($30)
-2. Same articles → SmartCache → Cache hit → Instant result (FREE)
-3. **Result**: 80% cache hit rate = $6 instead of $30 per execution
+[▶️ Download Workflow File](workflows/image_generation.json)
 
-### Example 2: Image Generation Pipeline
+![Image Generation Workflow](https://raw.githubusercontent.com/skadaai/n8n-nodes-smartcache/main/workflows/image_generation.png)
 
-```json
-{
-  "name": "Image Generation Cache", 
-  "type": "n8n-nodes-smartcache.smartCache",
-  "parameters": {
-    "cacheDir": "/tmp/image-cache",
-    "cacheKeyFields": "prompt,style,dimensions",
-    "ttl": 720
-  }
-}
+---
+
+### Example 3: Caching Dynamic API Calls in a Loop
+
+**Scenario**: A common pattern is to fetch a list of items, then loop through that list to fetch detailed information for each item. This can result in hundreds of API calls, which is a perfect use case for caching.
+
+**Logic**:
+1.  **Get All Posts**: Fetches a list of 100 sample posts.
+2.  **Loop Over Posts**: The `SplitInBatches` node processes each item from the list individually.
+3.  **SmartCache (Check)**: For each item, the cache is checked using the post's `id` as the unique key.
+4.  **Cache Miss**: If the post's details are not in the cache, an `HTTP Request` is made to fetch that specific post.
+5.  **SmartCache (Write)**: The details of the new post are written to the cache.
+6.  **Cache Hit**: If the post was fetched on a previous run, its details are returned instantly from the cache, saving an API call.
+
+```mermaid
+graph TD
+    A[Get List of Items] --> B{Loop Over Each Item};
+    B --> C(SmartCache);
+    C -->|Miss| D[Get Item Details by ID];
+    D --> E(SmartCache Write);
+    C -->|Hit| F(Final Result);
+    E --> F;
 ```
 
-### Example 3: Batch Audio Processing
+[▶️ Download Workflow File](workflows/api_caching.json)
 
-```json
-{
-  "name": "Audio Processing Cache",
-  "type": "n8n-nodes-smartcache.smartCache",
-  "parameters": {
-    "batchMode": true,
-    "cacheDir": "/tmp/audio-cache", 
-    "ttl": 72
-  }
-}
-```
-
-### Example 4: Binary File Processing
-
-SmartCache handles binary data (videos, images, PDFs, audio) transparently:
-
-```json
-{
-  "name": "Binary File Cache",
-  "type": "n8n-nodes-smartcache.smartCache",
-  "parameters": {
-    "cacheDir": "/tmp/binary-cache",
-    "cacheKeyFields": "filename,size,hash",
-    "ttl": 24
-  }
-}
-```
+![Dynamic API Call Caching Workflow](https://raw.githubusercontent.com/skadaai/n8n-nodes-smartcache/main/workflows/api_caching.png)
 
 ## 🔧 Advanced Configuration
 

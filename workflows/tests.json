@@ -1,0 +1,422 @@
+{
+  "name": "SmartCache Kitchen Sink",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-960, 1072],
+      "id": "dfdc8394-c8c0-43ef-8550-08aac62e8287",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [288, 224],
+      "id": "1ea88fdd-5949-4cb6-b302-8f8a7ce2af01",
+      "name": "Download"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "text": "CACHED ! CACHED ! CACHED !\nCACHED ! CACHED ! CACHED !\nCACHED ! CACHED ! CACHED !",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [400, 224],
+      "id": "76b0fee7-1efe-4250-b918-396adae14e7d",
+      "name": "Process"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [272, 688],
+      "id": "76e57a2c-04a3-490d-8799-772fd4644cf6",
+      "name": "Download1"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "text": "CACHED ! CACHED ! CACHED !\nCACHED ! CACHED ! CACHED !\nCACHED ! CACHED ! CACHED !",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [384, 688],
+      "id": "c6dbde44-09f5-4323-ab63-9ca0e6b4684f",
+      "name": "Process1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [64, 1072],
+      "id": "2edef6e2-1442-4233-88f9-5331cf66973e",
+      "name": "Download2"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "text": "CACHED ! CACHED ! CACHED !\nCACHED ! CACHED ! CACHED !\nCACHED ! CACHED ! CACHED !",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [400, 1248],
+      "id": "ddda62dd-c82e-4945-a340-11a66e20f68c",
+      "name": "Process2"
+    },
+    {
+      "parameters": {
+        "content": "## Binary Input\nI can handle binary inputs and send them down transparently",
+        "height": 500,
+        "width": 600,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [0, 960],
+      "typeVersion": 1,
+      "id": "bce04301-06a0-4df5-9e7e-e00d89b33735",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Basic Use\nI can load and persist cache data",
+        "height": 440,
+        "width": 600,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [0, 0],
+      "typeVersion": 1,
+      "id": "080cec97-3e7d-4429-bb2a-cd51ef56ad36",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Basic (option: forced)\n_I am capable of always missing the cache_",
+        "height": 420,
+        "width": 600,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [0, 480],
+      "typeVersion": 1,
+      "id": "f5653537-0028-46d2-9e9c-9359015d18f8",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "cacheDir": "/tmp/n8n-smartcache-0"
+      },
+      "type": "n8n-nodes-smartcache.smartCache",
+      "typeVersion": 1,
+      "position": [128, 112],
+      "id": "f68e2a4a-db14-48f0-9505-4462e4dd3a61",
+      "name": "All defaults ON"
+    },
+    {
+      "parameters": {
+        "force": true,
+        "cacheDir": "/tmp/n8n-smartcache-1"
+      },
+      "type": "n8n-nodes-smartcache.smartCache",
+      "typeVersion": 1,
+      "position": [112, 560],
+      "id": "2d1019b1-0572-4dea-9811-02d6dedc2b56",
+      "name": "Force Miss: ON"
+    },
+    {
+      "parameters": {
+        "cacheDir": "/tmp/n8n-cache-2"
+      },
+      "type": "n8n-nodes-smartcache.smartCache",
+      "typeVersion": 1,
+      "position": [240, 1104],
+      "id": "dd519114-22ac-4c48-89c4-5b77f086d9b0",
+      "name": "Binary Input"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { 'hello': 'world' };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [224, 2352],
+      "id": "d4362780-912b-481b-8f38-49c75df0f56c",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "content": "## Edge cases [Tests]\n\n* No SmartCache data is passed over from `miss` to `write`",
+        "height": 480,
+        "width": 600
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [0, 2080],
+      "typeVersion": 1,
+      "id": "bfc6f554-b5d3-41aa-b891-bfc81f3738f3",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-smartcache.smartCache",
+      "typeVersion": 1,
+      "position": [224, 2192],
+      "id": "5aeb2a46-5f56-4491-bb9c-66e767cdf266",
+      "name": "Empty passthrough"
+    },
+    {
+      "parameters": {
+        "content": "## Batch Mode\nI can handle multiple input items that return a single output",
+        "height": 500,
+        "width": 600,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [0, 1520],
+      "typeVersion": 1,
+      "id": "45615abd-95c9-43f3-906b-b30512e00b26",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [320, 1808],
+      "id": "f6f5ef02-0799-464d-83ad-e929452588c4",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "batchMode": true,
+        "cacheDir": "/tmp/n8n-cache-3"
+      },
+      "type": "n8n-nodes-smartcache.smartCache",
+      "typeVersion": 1,
+      "position": [160, 1664],
+      "id": "9cf8b1c6-1e7a-4dd0-b125-bd9137d5437e",
+      "name": "Bath Mode"
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Test workflow’": [
+      {
+        "json": {
+          "url": "https://placehold.jp/600x600.png"
+        }
+      },
+      {
+        "json": {
+          "url": "https://placehold.jp/400x400.png"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Empty passthrough",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "All defaults ON",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Force Miss: ON",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Bath Mode",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download": {
+      "main": [
+        [
+          {
+            "node": "Process",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process": {
+      "main": [
+        [
+          {
+            "node": "All defaults ON",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Download1": {
+      "main": [
+        [
+          {
+            "node": "Process1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process1": {
+      "main": [
+        [
+          {
+            "node": "Force Miss: ON",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Download2": {
+      "main": [
+        [
+          {
+            "node": "Binary Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process2": {
+      "main": [
+        [
+          {
+            "node": "Binary Input",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "All defaults ON": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Download",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Force Miss: ON": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Download1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Binary Input": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Process2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Empty passthrough",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Empty passthrough": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Bath Mode",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Bath Mode": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "87ea1248-37e7-4f32-853f-290a2f54d243",
+  "meta": {
+    "instanceId": "81033568bed4d928310738b31c51dbbedee2fd58c3540ba6910b7399074de5c1"
+  },
+  "id": "E92UEsmJOrFfIlXS",
+  "tags": []
+}
