@@ -7,13 +7,31 @@
 **💰 Save Thousands on API Costs | ⚡ 10x Faster Workflows | 🧠 Intelligent Caching**
 
 [![Discord](https://img.shields.io/discord/1346833819172601907?logo=discord&style=flat-square&color=FF6D5A&label=Discord)](https://discord.gg/N9mVvxRXyH)
-[![npm version](https://img.shields.io/npm/v/n8n-nodes-smartcache?style=flat-square&label=npm%3A%20n8n-nodes-smartcache&color=FF6D5A)](https://www.npmjs.com/package/n8n-nodes-smartcache)
+[![npm version](https://img.shields.io/npm/v/n8n-nodes-smartcache?style=flat-square&label=n8n-nodes-smartcache&color=FF6D5A)](https://www.npmjs.com/package/n8n-nodes-smartcache)
 [![License](https://img.shields.io/npm/l/n8n-nodes-smartcache?style=flat-square&color=FF6D5A)](LICENSE)
 [![N8N Community Node](https://img.shields.io/badge/n8n-community%20node-FF6D5A?style=flat-square)](https://www.npmjs.com/search?q=keywords:n8n-community-node-package)
 [![GitHub Stars](https://img.shields.io/github/stars/skadaai/n8n-nodes-smartcache?logo=github&style=flat-square&color=FF6D5A)](https://github.com/skadaai/n8n-nodes-smartcache)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/zvictor?logo=github&style=flat-square&color=FF6D5A)](https://github.com/sponsors/zvictor)
 
 </div>
+
+## Table of Contents
+
+- [💡 The Problem SmartCache Solves](#-the-problem-smartcache-solves)
+- [🚀 Key Benefits](#-key-benefits)
+- [💰 High-Value Use Cases](#-high-value-use-cases)
+- [📊 Performance Impact](#-performance-impact)
+- [🏗️ How It Works](#-how-it-works)
+- [📥 Installation](#-installation)
+- [⚙️ Configuration](#-configuration)
+- [📚 Usage Examples](#-usage-examples)
+- [🔧 Advanced Configuration](#-advanced-configuration)
+- [🛠️ Troubleshooting](#-troubleshooting)
+- [📈 Monitoring & Analytics](#-monitoring-analytics)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [🆘 Support](#-support)
+- [🔗 Related](#-related)
 
 ## 💡 The Problem SmartCache Solves
 
