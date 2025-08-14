@@ -23,7 +23,7 @@
 - [📊 Performance Impact](#-performance-impact)
 - [🏗️ How It Works](#-how-it-works)
 - [📥 Installation](#-installation)
-- [⚙️ Configuration](#-configuration)
+- [⚙️ Configuration](#%EF%B8%8F-configuration)
 - [📚 Usage Examples](#-usage-examples)
 - [🔧 Advanced Configuration](#-advanced-configuration)
 - [🛠️ Troubleshooting](#-troubleshooting)
