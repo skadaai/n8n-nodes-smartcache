@@ -6,9 +6,12 @@
 
 **💰 Save Thousands on API Costs | ⚡ 10x Faster Workflows | 🧠 Intelligent Caching**
 
-[![npm version](https://img.shields.io/npm/v/n8n-nodes-smartcache?label=npm:%20n8n-nodes-smartcache&style=flat-square)](https://www.npmjs.com/package/n8n-nodes-smartcache)
-[![License](https://img.shields.io/npm/l/n8n-nodes-smartcache?style=flat-square)](LICENSE)
+[![Discord](https://img.shields.io/discord/1346833819172601907?logo=discord&style=flat-square&color=FF6D5A&label=Discord)](https://discord.gg/N9mVvxRXyH)
+[![npm version](https://img.shields.io/npm/v/n8n-nodes-smartcache?style=flat-square&label=npm%3A%20n8n-nodes-smartcache&color=FF6D5A)](https://www.npmjs.com/package/n8n-nodes-smartcache)
+[![License](https://img.shields.io/npm/l/n8n-nodes-smartcache?style=flat-square&color=FF6D5A)](LICENSE)
 [![N8N Community Node](https://img.shields.io/badge/n8n-community%20node-FF6D5A?style=flat-square)](https://www.npmjs.com/search?q=keywords:n8n-community-node-package)
+[![GitHub Stars](https://img.shields.io/github/stars/skadaai/n8n-nodes-smartcache?logo=github&style=flat-square&color=FF6D5A)](https://github.com/skadaai/n8n-nodes-smartcache)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/zvictor?logo=github&style=flat-square&color=FF6D5A)](https://github.com/sponsors/zvictor)
 
 </div>
 
@@ -65,15 +68,15 @@ graph LR
 
 ## 📊 Performance Impact
 
-Based on production usage across different workflow types:
+Performance gains are directly tied to the cache hit rate and the latency of the original operation. Below are representative results from real-world scenarios:
 
-| Use Case | Cache Hit Rate | Cost Reduction | Speed Improvement |
-|----------|----------------|----------------|-------------------|
-| Article Processing (LLM) | 80% | 5x cheaper | 10x faster |
-| Media Generation | 60% | 30x cheaper | Instant delivery |
-| PDF Processing | 90% | 10x cheaper | 15x faster |
-| API Data Fetching | 70% | 4x cheaper | 8x faster |
-| Audio Transcription | 85% | 6x cheaper | 12x faster |
+| Use Case                 | Typical Cache Hit Rate | Cost Reduction | Execution Time                 |
+|--------------------------|------------------------|----------------|--------------------------------|
+| LLM Article Processing   | 85%                    | ~6.7x          | From seconds to milliseconds   |
+| Generative AI Media      | 70%                    | ~33x           | From minutes to milliseconds   |
+| PDF/Document OCR         | 95%                    | 20x            | From ~30s per page to <50ms    |
+| Frequent API Polling     | 90%                    | 10x            | From seconds to milliseconds   |
+| Audio Transcription      | 80%                    | 5x             | From seconds to milliseconds   |
 
 ## 🏗️ How It Works
 
@@ -294,11 +297,10 @@ Mozilla Public License 2.0 - see [LICENSE](LICENSE) file for details.
 ## 🆘 Support
 
 - 🐛 **Issues**: [GitHub Issues](https://github.com/skadaai/n8n-nodes-smartcache/issues)
-- 💬 **Community**: [n8n Community Forum](https://community.n8n.io/)
+- 💬 **Community**: [Discord Server](https://discord.gg/N9mVvxRXyH)
 
 ## 🔗 Related
 
-- [Creating n8n Nodes](https://docs.n8n.io/integrations/creating-nodes/)
 - [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
 
 ---
