@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SmartCache — Cache Expensive API & AI Calls for n8n</title>
+    <meta name="description" content="Save thousands on API and AI costs with SmartCache for n8n. 10x faster workflows via intelligent, persistent caching for JSON, binaries, and API responses." />
+    <meta name="theme-color" content="#0b0d10" />
+    <link rel="icon" href="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/nodes/SmartCache/smartCache.svg" type="image/svg+xml" />
+    <!-- Social sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="SmartCache — Save API Costs. 10x Faster Workflows." />
+    <meta property="og:description" content="Intelligent caching for LLMs, media, OCR, and APIs in n8n. Cache JSON and binaries with TTL, isolation, and dual I/O." />
+    <meta property="og:image" content="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/text_summarization.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SmartCache — Save API Costs. 10x Faster Workflows." />
+    <meta name="twitter:description" content="Intelligent caching for LLMs, media, OCR, and APIs in n8n." />
+    <meta name="twitter:image" content="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/text_summarization.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top">
+        <img src="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/nodes/SmartCache/smartCache.svg" alt="SmartCache logo" />
+        <span>SmartCache</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-list">☰</button>
+        <ul id="nav-list">
+          <li><a href="#problem">Problem</a></li>
+          <li><a href="#benefits">Benefits</a></li>
+          <li><a href="#use-cases">Use Cases</a></li>
+          <li><a href="#how">How</a></li>
+          <li><a href="#performance">Performance</a></li>
+          <li><a href="#install">Install</a></li>
+          <li><a href="#examples">Examples</a></li>
+          <li><a href="#support">Support</a></li>
+          <li><a class="cta" href="https://www.npmjs.com/package/n8n-nodes-smartcache" target="_blank" rel="noreferrer noopener">npm</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-content">
+          <div class="eyebrow">n8n Community Node</div>
+          <h1>Save Thousands on API Costs.<br />Make Workflows 10x Faster.</h1>
+          <p class="lead">SmartCache intelligently caches expensive calls to LLMs, media generation, OCR, and external APIs — across JSON and binary data — so repeated work returns instantly.</p>
+          <div class="hero-ctas">
+            <a class="btn primary" href="#install">Install in n8n</a>
+            <a class="btn" href="https://github.com/skadaai/n8n-nodes-smartcache" target="_blank" rel="noreferrer noopener">View on GitHub</a>
+          </div>
+          <div class="hero-badges">
+            <a href="https://discord.gg/N9mVvxRXyH" target="_blank" rel="noreferrer noopener">Discord</a>
+            <a href="https://www.npmjs.com/package/n8n-nodes-smartcache" target="_blank" rel="noreferrer noopener">npm</a>
+            <a href="https://github.com/sponsors/zvictor" target="_blank" rel="noreferrer noopener">Sponsor</a>
+          </div>
+          <figure class="hero-visual">
+            <img src="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/text_summarization.png" alt="SmartCache example: text summarization workflow in n8n" />
+          </figure>
+        </div>
+      </section>
+
+      <section id="problem" class="section problem">
+        <header>
+          <h2>The Problem SmartCache Solves</h2>
+          <p>Stop burning money on repeated API calls. SmartCache cuts cost and latency for repeatable work across LLMs, media generation, OCR, and external APIs.</p>
+        </header>
+        <ul class="bulleted">
+          <li><strong>LLM API Calls:</strong> Save $100s–$1000s monthly on GPT/Claude/Gemini runs</li>
+          <li><strong>Media Generation:</strong> Avoid repeated Imagen/Midjourney/SD charges for identical prompts</li>
+          <li><strong>File Processing:</strong> Cache expensive PDF parsing, OCR, and audio transcription</li>
+          <li><strong>External APIs:</strong> Reduce redundant requests and dodge rate limits</li>
+          <li><strong>Binary Operations:</strong> Reuse processed images, videos, and documents</li>
+        </ul>
+      </section>
+
+      <section id="benefits" class="section benefits">
+        <header>
+          <h2>Key Benefits</h2>
+          <p>Designed for n8n workflows handling JSON, binaries, and high-cost external calls.</p>
+        </header>
+        <div class="grid-two">
+          <ul class="bulleted">
+            <li>Automatic SHA‑256 cache keys from sorted input</li>
+            <li>Universal compatibility: JSON, binaries, API responses</li>
+            <li>TTL support (hours or infinite)</li>
+            <li>Selective fields for key generation</li>
+            <li>Persistent file-based storage</li>
+          </ul>
+          <ul class="bulleted">
+            <li>Dual inputs: Check and Write</li>
+            <li>Explicit outputs: Hit and Miss</li>
+            <li>Node-specific isolation per instance</li>
+            <li>Batch and individual modes</li>
+            <li>Clear, structured logging</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="use-cases" class="section use-cases">
+        <header>
+          <h2>High‑Value Use Cases</h2>
+          <p>Where SmartCache pays for itself fast.</p>
+        </header>
+        <div class="grid-two">
+          <div>
+            <h3>🧠 LLM & AI Operations</h3>
+            <p><strong>Example:</strong> Summarize 1000 articles per run. With ~85–90% hit rate, cost drops from dollars to cents, and results return instantly.</p>
+          </div>
+          <div>
+            <h3>🖼️ Media Generation & Processing</h3>
+            <p>Cache image/video outputs for identical prompts or parameters; avoid minutes-long re-renders and duplicate charges.</p>
+          </div>
+          <div>
+            <h3>📄 Document Processing</h3>
+            <p>OCR, PDF parsing, and transcription are costly and slow — cache once, reuse forever.</p>
+          </div>
+          <div>
+            <h3>🌐 External API Calls</h3>
+            <p>Reduce redundant fetches, manage rate limits, and stabilize response times with cached payloads.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" class="section how">
+        <header>
+          <h2>How It Works</h2>
+          <p>Dual input/output design that only processes cache misses, then persists results for future hits.</p>
+        </header>
+        <div class="grid-two">
+          <div>
+            <h3>Flow</h3>
+            <ol class="numbered">
+              <li>Check: compute key from input, look up cache</li>
+              <li>Process: only misses hit APIs/LLMs/expensive steps</li>
+              <li>Write: persist results for next-time instant hits</li>
+            </ol>
+            <p class="muted">Inputs: Check, Write • Outputs: Hit, Miss</p>
+          </div>
+          <div>
+            <h3>Cache Key Generation</h3>
+            <ul class="bulleted">
+              <li>SHA‑256 hashing for consistent, secure keys</li>
+              <li>Node ID included to prevent collisions</li>
+              <li>Selective fields for fine-tuned strategies</li>
+              <li>Sorted keys to guarantee deterministic hashing</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="performance" class="section performance">
+        <header>
+          <h2>Performance Impact</h2>
+          <p>Gains depend on hit rate and original latency. Typical results:</p>
+        </header>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Use Case</th><th>Typical Hit Rate</th><th>Cost Reduction</th><th>Execution Time</th></tr></thead>
+            <tbody>
+              <tr><td>LLM Article Processing</td><td>~85%</td><td>~6.7×</td><td>Seconds → ms</td></tr>
+              <tr><td>Generative AI Media</td><td>~70%</td><td>~33×</td><td>Minutes → ms</td></tr>
+              <tr><td>PDF/Document OCR</td><td>~95%</td><td>20×</td><td>~30s/page → &lt;50ms</td></tr>
+              <tr><td>Frequent API Polling</td><td>~90%</td><td>10×</td><td>Seconds → ms</td></tr>
+              <tr><td>Audio Transcription</td><td>~80%</td><td>5×</td><td>Seconds → ms</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="install" class="section install">
+        <header>
+          <h2>Installation & Configuration</h2>
+          <p>Install via n8n GUI or npm, then configure the node parameters.</p>
+        </header>
+        <div class="grid-two">
+          <div class="panel">
+            <h3>Install</h3>
+            <p><strong>n8n (GUI):</strong></p>
+            <ol class="numbered">
+              <li>Settings → Community Nodes</li>
+              <li>Install → <code>n8n-nodes-smartcache</code></li>
+            </ol>
+            <p><strong>Self-hosted:</strong></p>
+            <pre><code>npm install n8n-nodes-smartcache</code></pre>
+          </div>
+          <div class="panel">
+            <h3>Node Parameters</h3>
+            <div class="table-wrap">
+              <table class="table compact">
+                <thead><tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td>Batch Mode</td><td>Boolean</td><td>false</td><td>Process all items as a single unit</td></tr>
+                  <tr><td>Force Miss</td><td>Boolean</td><td>false</td><td>Force cache miss and regenerate</td></tr>
+                  <tr><td>Cache Key Fields</td><td>String</td><td>""</td><td>Comma-separated fields for key (empty = all)</td></tr>
+                  <tr><td>TTL (Hours)</td><td>Number</td><td>24</td><td>0 = infinite</td></tr>
+                  <tr><td>Cache Directory</td><td>String</td><td>/tmp/n8n-smartcache</td><td>Where cache files are stored</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="muted small">Inputs: Check, Write • Outputs: Hit, Miss</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="examples" class="section examples">
+        <header>
+          <h2>Usage Examples</h2>
+          <p>Importable workflows with previews included in the repo.</p>
+        </header>
+        <div class="shots">
+          <figure class="shot">
+            <a href="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/text_summarization.png" target="_blank" rel="noreferrer noopener">
+              <img loading="lazy" src="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/text_summarization.png" alt="Text Summarization workflow" />
+            </a>
+            <figcaption><span>Text Summarization</span><a class="mini" href="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/text_summarization.json" download>Download JSON</a></figcaption>
+          </figure>
+          <figure class="shot">
+            <a href="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/image_generation.png" target="_blank" rel="noreferrer noopener">
+              <img loading="lazy" src="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/image_generation.png" alt="Image Generation workflow" />
+            </a>
+            <figcaption><span>Image Generation</span><a class="mini" href="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/image_generation.json" download>Download JSON</a></figcaption>
+          </figure>
+          <figure class="shot">
+            <a href="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/api_caching.png" target="_blank" rel="noreferrer noopener">
+              <img loading="lazy" src="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/api_caching.png" alt="Dynamic API Caching workflow" />
+            </a>
+            <figcaption><span>Dynamic API Caching</span><a class="mini" href="https://github.com/skadaai/n8n-nodes-smartcache/raw/main/workflows/api_caching.json" download>Download JSON</a></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="support" class="section support">
+        <header>
+          <h2>Support</h2>
+          <p>Issues, community, and licensing.</p>
+        </header>
+        <ul class="bulleted">
+          <li><a href="https://github.com/skadaai/n8n-nodes-smartcache/issues" target="_blank" rel="noreferrer noopener">GitHub Issues</a> — report bugs or request features</li>
+          <li><a href="https://discord.gg/N9mVvxRXyH" target="_blank" rel="noreferrer noopener">Discord</a> — community chat</li>
+          <li>License: Mozilla Public License 2.0</li>
+        </ul>
+      </section>
+
+      
+
+      <section id="install" class="section install-solo">
+        <header>
+          <h2>Install</h2>
+          <p>Use n8n’s GUI or add the package directly.</p>
+        </header>
+        <pre class="install-code"><code>npm install n8n-nodes-smartcache</code></pre>
+        <p class="muted small">n8n GUI: Settings → Community Nodes → Install → <code>n8n-nodes-smartcache</code></p>
+        <div class="hero-ctas">
+          <a class="btn" href="https://docs.n8n.io/integrations/community-nodes/installation/" target="_blank" rel="noreferrer noopener">Community Nodes Docs</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="social">
+        <a href="https://github.com/skadaai/n8n-nodes-smartcache" target="_blank" rel="noreferrer noopener">GitHub</a>
+        <a href="https://www.npmjs.com/package/n8n-nodes-smartcache" target="_blank" rel="noreferrer noopener">npm</a>
+        <a href="https://discord.gg/N9mVvxRXyH" target="_blank" rel="noreferrer noopener">Discord</a>
+      </div>
+      <p>Mozilla Public License 2.0 — © SmartCache contributors</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+  </html>
