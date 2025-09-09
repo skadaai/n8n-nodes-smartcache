@@ -5,6 +5,7 @@ node_modules/
 dist/
 
 # Environment variables
+.direnv
 .env
 .env.*
 
