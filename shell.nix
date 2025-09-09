@@ -12,6 +12,9 @@ pkgs.mkShell {
     ncurses
     openssh
     git
-    bun
+
+    # Tools for Node environment management
+    corepack_latest
+    nodePackages_latest.nodejs
   ];
 }
