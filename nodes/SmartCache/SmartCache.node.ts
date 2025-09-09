@@ -32,12 +32,20 @@ const getItemIndex = (pairedItem: INodeExecutionData['pairedItem']): number => {
   return pairedItem
 }
 
-const getCachePathFromItem = (item: INodeExecutionData, context: IContextObject) => {
-  const ctx = context[getItemIndex(item.pairedItem)]
-  assert(ctx, 'Context not found in input data')
-  const cachePath = ctx.cachePath
-  assert(cachePath, 'Cache path not found in input data')
-  return cachePath
+// Resolve cache path from the item itself; fall back to deterministic recompute
+const getCachePathFromItem = (
+  item: INodeExecutionData,
+  cacheKeyFields: string,
+  cacheDir: string,
+  nodeId: string,
+) => {
+  const sc = (item.json as any)?.$smartCache as
+    | { cachePath?: string; cacheKey?: string; nodeId?: string; cacheKeyFields?: string }
+    | undefined
+  if (sc?.cachePath) return sc.cachePath
+
+  const meta = generateCacheMetadata(item, cacheKeyFields, cacheDir, nodeId)
+  return meta.cachePath
 }
 
 const processItemData = (item: INodeExecutionData, cacheKeyFields: string) =>
@@ -98,13 +106,15 @@ const generateCacheMetadata = (
 
 const writeToCacheFile = async (
   items: INodeExecutionData | INodeExecutionData[],
-  context: IContextObject,
+  cacheKeyFields: string,
+  cacheDir: string,
+  nodeId: string,
   batchMode = false,
 ) => {
-  // If array, any item serves as they all share the same $smartcache object
+  // If array, any item serves as they all share the same $smartCache object
   const firstItem = Array.isArray(items) ? items[0] : items
   assert(firstItem, 'Items cannot be empty')
-  const cachePath = getCachePathFromItem(firstItem, context)
+  const cachePath = getCachePathFromItem(firstItem, cacheKeyFields, cacheDir, nodeId)
   await fs.mkdir(path.dirname(cachePath), { recursive: true })
   await fs.writeFile(cachePath, JSON.stringify(items))
   console.log(`Wrote ${batchMode ? 'batch' : 'item'} to cache file: ${cachePath}`)
@@ -124,7 +134,7 @@ const handleCacheHit = async (cachePath: string, ttl: number) => {
 
 const processBatch = async (
   items: INodeExecutionData[],
-  context: IContextObject,
+  _context: IContextObject,
   cacheKeyFields: string,
   cacheDir: string,
   force: boolean,
@@ -133,12 +143,6 @@ const processBatch = async (
   nodeId: string,
 ) => {
   const $smartCache = generateCacheMetadata(items, cacheKeyFields, cacheDir, nodeId)
-
-  // Store cache metadata for each item
-  items.forEach((item) => {
-    const itemIndex = getItemIndex(item.pairedItem)
-    context[itemIndex] = $smartCache
-  })
 
   logger.debug('[SmartCache] Generated batch cache metadata:', {
     cacheKey: $smartCache.cacheKey,
@@ -156,19 +160,44 @@ const processBatch = async (
     if (result.status === 'hit') {
       return { hits: Array.isArray(result.content) ? result.content : [result.content], misses: [] }
     }
-    return { hits: [], misses: items }
+    // Miss: embed metadata on items
+    const missesWithMeta = items.map((item) => ({
+      ...item,
+      json: {
+        ...item.json,
+        $smartCache: {
+          cacheKey: $smartCache.cacheKey,
+          cachePath: $smartCache.cachePath,
+          nodeId,
+          cacheKeyFields,
+        },
+      },
+    }))
+    return { hits: [], misses: missesWithMeta }
   } catch (error) {
     logger.debug('[SmartCache] Batch cache miss:', {
       cacheKey: $smartCache.cacheKey,
       error: error instanceof Error ? error.message : String(error),
     })
-    return { hits: [], misses: items }
+    const missesWithMeta = items.map((item) => ({
+      ...item,
+      json: {
+        ...item.json,
+        $smartCache: {
+          cacheKey: $smartCache.cacheKey,
+          cachePath: $smartCache.cachePath,
+          nodeId,
+          cacheKeyFields,
+        },
+      },
+    }))
+    return { hits: [], misses: missesWithMeta }
   }
 }
 
 const processSingleItem = async (
   item: INodeExecutionData,
-  context: IContextObject,
+  _context: IContextObject,
   cacheKeyFields: string,
   cacheDir: string,
   force: boolean,
@@ -177,8 +206,6 @@ const processSingleItem = async (
   nodeId: string,
 ) => {
   const $smartCache = generateCacheMetadata(item, cacheKeyFields, cacheDir, nodeId)
-  const itemIndex = getItemIndex(item.pairedItem)
-  context[itemIndex] = $smartCache
 
   logger.debug('[SmartCache] Generated cache metadata:', {
     cacheKey: $smartCache.cacheKey,
@@ -188,7 +215,19 @@ const processSingleItem = async (
   })
 
   if (force) {
-    return { hit: null, miss: item }
+    const missWithMeta: INodeExecutionData = {
+      ...item,
+      json: {
+        ...item.json,
+        $smartCache: {
+          cacheKey: $smartCache.cacheKey,
+          cachePath: $smartCache.cachePath,
+          nodeId,
+          cacheKeyFields,
+        },
+      },
+    }
+    return { hit: null, miss: missWithMeta }
   }
 
   try {
@@ -196,13 +235,37 @@ const processSingleItem = async (
     if (result.status === 'hit') {
       return { hit: result.content, miss: null }
     }
-    return { hit: null, miss: item }
+    const missWithMeta: INodeExecutionData = {
+      ...item,
+      json: {
+        ...item.json,
+        $smartCache: {
+          cacheKey: $smartCache.cacheKey,
+          cachePath: $smartCache.cachePath,
+          nodeId,
+          cacheKeyFields,
+        },
+      },
+    }
+    return { hit: null, miss: missWithMeta }
   } catch (error) {
     logger.debug('[SmartCache] Cache miss:', {
       cacheKey: $smartCache.cacheKey,
       error: error instanceof Error ? error.message : String(error),
     })
-    return { hit: null, miss: item }
+    const missWithMeta: INodeExecutionData = {
+      ...item,
+      json: {
+        ...item.json,
+        $smartCache: {
+          cacheKey: $smartCache.cacheKey,
+          cachePath: $smartCache.cachePath,
+          nodeId,
+          cacheKeyFields,
+        },
+      },
+    }
+    return { hit: null, miss: missWithMeta }
   }
 }
 
@@ -228,7 +291,7 @@ export class SmartCache implements INodeType {
       {
         displayName: 'Write',
         type: NodeConnectionType.Main,
-        required: true,
+        required: false,
       },
     ],
     outputs: [
@@ -354,24 +417,17 @@ export class SmartCache implements INodeType {
 
     // Process cache writes
     if (cacheInput.length > 0) {
+      const nodeId = this.getNode().id
       if (batchMode) {
         const firstItem = cacheInput[0]
         assert(firstItem, 'Cache input cannot be empty')
-        assert(
-          getItemIndex(firstItem.pairedItem) !== undefined,
-          'Write input items must come from cache miss output',
-        )
-        await writeToCacheFile(cacheInput, context, true)
+        await writeToCacheFile(cacheInput, cacheKeyFields, cacheDir, nodeId, true)
         return [cacheInput, []]
       }
 
       const results: INodeExecutionData[] = []
       for (const item of cacheInput) {
-        assert(
-          getItemIndex(item.pairedItem) !== undefined,
-          'Write input items must come from cache miss output',
-        )
-        await writeToCacheFile(item, context)
+        await writeToCacheFile(item, cacheKeyFields, cacheDir, nodeId)
         results.push(item)
       }
 
