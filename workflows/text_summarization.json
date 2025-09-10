@@ -16,7 +16,7 @@
         "cacheDir": "/tmp/n8n-cache/summaries"
       },
       "name": "SmartCache",
-      "type": "n8n-nodes-smartcache.smartCache",
+      "type": "n8n-nodes-smartcache-local.smartCache",
       "typeVersion": 1,
       "position": [64, -256],
       "id": "45109829-bcae-42a4-ae19-2804ceae1d91"

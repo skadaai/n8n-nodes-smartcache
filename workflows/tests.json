@@ -121,7 +121,7 @@
       "parameters": {
         "cacheDir": "/tmp/n8n-smartcache-0"
       },
-      "type": "n8n-nodes-smartcache.smartCache",
+      "type": "n8n-nodes-smartcache-local.smartCache",
       "typeVersion": 1,
       "position": [128, 112],
       "id": "f68e2a4a-db14-48f0-9505-4462e4dd3a61",
@@ -132,7 +132,7 @@
         "force": true,
         "cacheDir": "/tmp/n8n-smartcache-1"
       },
-      "type": "n8n-nodes-smartcache.smartCache",
+      "type": "n8n-nodes-smartcache-local.smartCache",
       "typeVersion": 1,
       "position": [112, 560],
       "id": "2d1019b1-0572-4dea-9811-02d6dedc2b56",
@@ -142,7 +142,7 @@
       "parameters": {
         "cacheDir": "/tmp/n8n-cache-2"
       },
-      "type": "n8n-nodes-smartcache.smartCache",
+      "type": "n8n-nodes-smartcache-local.smartCache",
       "typeVersion": 1,
       "position": [240, 1104],
       "id": "dd519114-22ac-4c48-89c4-5b77f086d9b0",
@@ -173,7 +173,7 @@
     },
     {
       "parameters": {},
-      "type": "n8n-nodes-smartcache.smartCache",
+      "type": "n8n-nodes-smartcache-local.smartCache",
       "typeVersion": 1,
       "position": [224, 2192],
       "id": "5aeb2a46-5f56-4491-bb9c-66e767cdf266",
@@ -207,7 +207,7 @@
         "batchMode": true,
         "cacheDir": "/tmp/n8n-cache-3"
       },
-      "type": "n8n-nodes-smartcache.smartCache",
+      "type": "n8n-nodes-smartcache-local.smartCache",
       "typeVersion": 1,
       "position": [160, 1664],
       "id": "9cf8b1c6-1e7a-4dd0-b125-bd9137d5437e",

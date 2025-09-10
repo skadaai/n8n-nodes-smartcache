@@ -216,7 +216,7 @@ export class SmartCache implements INodeType {
     description: 'Intelligent caching node with automatic hash generation and TTL support',
     subtitle:
       '={{ ($parameter["batchMode"] ? "Batch" : "Individual") + ($parameter["force"] ? " • ⚠️ Force Miss" : "") }}',
-    documentationUrl: 'https://github.com/skadaai/n8n-nodes-smartcache#readme',
+    documentationUrl: 'https://github.com/skadaai/n8n-nodes-smartcache/tree/local#readme',
     defaults: {
       name: 'Smart Cache',
     },

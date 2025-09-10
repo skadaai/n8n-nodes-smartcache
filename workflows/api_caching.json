@@ -27,7 +27,7 @@
         "cacheDir": "/tmp/n8n-cache/dynamic-api-calls"
       },
       "name": "SmartCache",
-      "type": "n8n-nodes-smartcache.smartCache",
+      "type": "n8n-nodes-smartcache-local.smartCache",
       "typeVersion": 1,
       "position": [160, -336],
       "id": "49d54524-e1a0-4dff-b727-b0814f0354f4"

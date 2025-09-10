@@ -1,5 +1,5 @@
 {
-  "name": "n8n-nodes-smartcache",
+  "name": "n8n-nodes-smartcache-local",
   "version": "0.1.0",
   "description": "N8N community node for intelligent caching with automatic hash generation and TTL support",
   "keywords": [
@@ -14,7 +14,7 @@
   "homepage": "https://skada.ai/smartcache",
   "repository": {
     "type": "git",
-    "url": "https://github.com/skadaai/n8n-nodes-smartcache.git"
+    "url": "https://github.com/skadaai/n8n-nodes-smartcache.git#local"
   },
   "author": {
     "name": "zvictor",

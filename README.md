@@ -7,8 +7,8 @@
 **💰 Save Thousands on API Costs | ⚡ 10x Faster Workflows | 🧠 Intelligent Caching**
 
 [![Discord](https://img.shields.io/discord/1346833819172601907?logo=discord&style=flat-square&color=FF6D5A&label=Discord)](https://discord.gg/N9mVvxRXyH)
-[![npm version](https://img.shields.io/npm/v/n8n-nodes-smartcache?style=flat-square&label=n8n-nodes-smartcache&color=FF6D5A)](https://www.npmjs.com/package/n8n-nodes-smartcache)
-[![License](https://img.shields.io/npm/l/n8n-nodes-smartcache?style=flat-square&color=FF6D5A)](LICENSE)
+[![npm version](https://img.shields.io/npm/v/n8n-nodes-smartcache-local?style=flat-square&label=n8n-nodes-smartcache-local&color=FF6D5A)](https://www.npmjs.com/package/n8n-nodes-smartcache-local)
+[![License](https://img.shields.io/npm/l/n8n-nodes-smartcache-local?style=flat-square&color=FF6D5A)](LICENSE)
 [![N8N Community Node](https://img.shields.io/badge/n8n-community%20node-FF6D5A?style=flat-square)](https://www.npmjs.com/search?q=keywords:n8n-community-node-package)
 [![GitHub Stars](https://img.shields.io/github/stars/skadaai/n8n-nodes-smartcache?logo=github&style=flat-square&color=FF6D5A)](https://github.com/skadaai/n8n-nodes-smartcache)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/zvictor?logo=github&style=flat-square&color=FF6D5A)](https://github.com/sponsors/zvictor)
@@ -125,7 +125,7 @@ graph TD
 
 1. Go to **Settings > Community Nodes**.
 2. Select **Install**.
-3. Enter `n8n-nodes-smartcache` in the `npm package name` field.
+3. Enter `n8n-nodes-smartcache-local` in the `npm package name` field.
 4. Agree to the risks of using community nodes.
 5. Select **Install**.
 
@@ -133,7 +133,7 @@ graph TD
 ### [For self-hosted n8n installations](https://docs.n8n.io/integrations/community-nodes/installation/manual-install/):
 
 ```bash
-npm install n8n-nodes-smartcache
+npm install n8n-nodes-smartcache-local
 ```
 
 ### For n8n Cloud users:
@@ -187,7 +187,7 @@ graph LR
 
 [▶️ Download Workflow File](workflows/text_summarization.json)
 
-![Text Summarization Workflow](https://raw.githubusercontent.com/skadaai/n8n-nodes-smartcache/main/workflows/text_summarization.png)
+![Text Summarization Workflow](https://raw.githubusercontent.com/skadaai/n8n-nodes-smartcache/local/workflows/text_summarization.png)
 
 ---
 
@@ -213,7 +213,7 @@ graph LR
 
 [▶️ Download Workflow File](workflows/image_generation.json)
 
-![Image Generation Workflow](https://raw.githubusercontent.com/skadaai/n8n-nodes-smartcache/main/workflows/image_generation.png)
+![Image Generation Workflow](https://raw.githubusercontent.com/skadaai/n8n-nodes-smartcache/local/workflows/image_generation.png)
 
 ---
 
@@ -241,7 +241,7 @@ graph TD
 
 [▶️ Download Workflow File](workflows/api_caching.json)
 
-![Dynamic API Call Caching Workflow](https://raw.githubusercontent.com/skadaai/n8n-nodes-smartcache/main/workflows/api_caching.png)
+![Dynamic API Call Caching Workflow](https://raw.githubusercontent.com/skadaai/n8n-nodes-smartcache/local/workflows/api_caching.png)
 
 ## 🔧 Advanced Configuration
 

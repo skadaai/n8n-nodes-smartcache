@@ -3,7 +3,7 @@ set -eu -o pipefail -E
 cd `dirname "$0"`
 cd ..
 
-PKG="n8n-nodes-smartcache"
+PKG="n8n-nodes-smartcache-local"
 
 # Color codes
 GREEN='\033[0;32m'
