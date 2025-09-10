@@ -10,7 +10,7 @@
     "workflow",
     "automation"
   ],
-  "license": "MPL-2.0",
+  "license": "MIT",
   "homepage": "https://skada.ai/smartcache",
   "repository": {
     "type": "git",
