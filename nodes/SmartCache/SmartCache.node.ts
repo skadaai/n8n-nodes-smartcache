@@ -7,8 +7,6 @@
  */
 
 import { createHash } from 'node:crypto'
-import { promises as fs } from 'node:fs'
-import * as path from 'node:path'
 import { strict as assert } from 'node:assert'
 import {
   IContextObject,
@@ -17,7 +15,10 @@ import {
   INodeType,
   INodeTypeDescription,
   NodeConnectionType,
+  NodeOperationError,
 } from 'n8n-workflow'
+
+import { CacheBackend, S3Backend, joinPrefix } from './storage'
 
 const getItemIndex = (pairedItem: INodeExecutionData['pairedItem']): number => {
   if (Array.isArray(pairedItem)) {
@@ -54,7 +55,7 @@ const processItemData = (item: INodeExecutionData, cacheKeyFields: string) =>
 const generateCacheMetadata = (
   items: INodeExecutionData | INodeExecutionData[],
   cacheKeyFields: string,
-  cacheDir: string,
+  prefix: string,
   nodeId: string,
 ) => {
   const dataToHash = Array.isArray(items)
@@ -88,51 +89,58 @@ const generateCacheMetadata = (
   const hash = createHash('sha256')
     .update(JSON.stringify({ nodeId, data: sortedData }))
     .digest('hex')
-  const cachePath = path.join(cacheDir, `${hash}.cache`)
+  const objectKey = joinPrefix(prefix, `${hash}.cache`)
 
   return {
     cacheKey: hash,
-    cachePath,
+    cachePath: objectKey,
   }
 }
 
-const writeToCacheFile = async (
+const writeToCache = async (
   items: INodeExecutionData | INodeExecutionData[],
   context: IContextObject,
-  batchMode = false,
+  backend?: CacheBackend,
 ) => {
   // If array, any item serves as they all share the same $smartcache object
   const firstItem = Array.isArray(items) ? items[0] : items
   assert(firstItem, 'Items cannot be empty')
   const cachePath = getCachePathFromItem(firstItem, context)
-  await fs.mkdir(path.dirname(cachePath), { recursive: true })
-  await fs.writeFile(cachePath, JSON.stringify(items))
-  console.log(`Wrote ${batchMode ? 'batch' : 'item'} to cache file: ${cachePath}`)
+  assert(backend, 'Cache backend not available')
+  await backend.put(cachePath, items)
+  console.debug(`[SmartCache] Wrote to cache at ${cachePath}`)
 }
 
-const handleCacheHit = async (cachePath: string, ttl: number) => {
-  const stats = await fs.stat(cachePath)
-  const cacheAge = (Date.now() - stats.mtime.getTime()) / (1000 * 60 * 60)
-
-  if (ttl > 0 && cacheAge >= ttl) {
-    return { status: 'expired', cacheAge }
+const handleCacheHit = async (
+  cachePath: string,
+  ttl: number,
+  backend: CacheBackend,
+) => {
+  const head = await backend.head(cachePath)
+  if (!head) return { status: 'miss' as const }
+  if (ttl > 0) {
+    const cacheAge = (Date.now() - head.lastModified.getTime()) / (1000 * 60 * 60)
+    if (cacheAge >= ttl) {
+      return { status: 'expired' as const, cacheAge }
+    }
   }
-
-  const cachedContent = JSON.parse(await fs.readFile(cachePath, 'utf-8'))
-  return { status: 'hit', content: cachedContent }
+  const content = await backend.get(cachePath)
+  if (content == null) return { status: 'miss' as const }
+  return { status: 'hit' as const, content }
 }
 
 const processBatch = async (
   items: INodeExecutionData[],
   context: IContextObject,
   cacheKeyFields: string,
-  cacheDir: string,
+  prefix: string,
   force: boolean,
   ttl: number,
   logger: IExecuteFunctions['logger'],
   nodeId: string,
+  backend: CacheBackend,
 ) => {
-  const $smartCache = generateCacheMetadata(items, cacheKeyFields, cacheDir, nodeId)
+  const $smartCache = generateCacheMetadata(items, cacheKeyFields, prefix, nodeId)
 
   // Store cache metadata for each item
   items.forEach((item) => {
@@ -152,7 +160,7 @@ const processBatch = async (
   }
 
   try {
-    const result = await handleCacheHit($smartCache.cachePath, ttl)
+    const result = await handleCacheHit($smartCache.cachePath, ttl, backend)
     if (result.status === 'hit') {
       return { hits: Array.isArray(result.content) ? result.content : [result.content], misses: [] }
     }
@@ -170,13 +178,14 @@ const processSingleItem = async (
   item: INodeExecutionData,
   context: IContextObject,
   cacheKeyFields: string,
-  cacheDir: string,
+  prefix: string,
   force: boolean,
   ttl: number,
   logger: IExecuteFunctions['logger'],
   nodeId: string,
+  backend: CacheBackend,
 ) => {
-  const $smartCache = generateCacheMetadata(item, cacheKeyFields, cacheDir, nodeId)
+  const $smartCache = generateCacheMetadata(item, cacheKeyFields, prefix, nodeId)
   const itemIndex = getItemIndex(item.pairedItem)
   context[itemIndex] = $smartCache
 
@@ -192,7 +201,7 @@ const processSingleItem = async (
   }
 
   try {
-    const result = await handleCacheHit($smartCache.cachePath, ttl)
+    const result = await handleCacheHit($smartCache.cachePath, ttl, backend)
     if (result.status === 'hit') {
       return { hit: result.content, miss: null }
     }
@@ -213,7 +222,8 @@ export class SmartCache implements INodeType {
     icon: 'file:smartCache.svg',
     group: ['transform'],
     version: 1,
-    description: 'Intelligent caching node with automatic hash generation and TTL support',
+    description:
+      'Intelligent caching node with automatic hash generation and TTL support. Persists cache objects to S3 (or S3-compatible) storage.',
     subtitle:
       '={{ ($parameter["batchMode"] ? "Batch" : "Individual") + ($parameter["force"] ? " • ⚠️ Force Miss" : "") }}',
     documentationUrl: 'https://github.com/skadaai/n8n-nodes-smartcache#readme',
@@ -243,7 +253,31 @@ export class SmartCache implements INodeType {
         required: true,
       },
     ],
+    /* eslint-disable n8n-nodes-base/node-class-description-credentials-name-unsuffixed */
+    credentials: [
+      {
+        name: 's3',
+        required: true,
+      },
+    ],
+    /* eslint-enable n8n-nodes-base/node-class-description-credentials-name-unsuffixed */
     properties: [
+      {
+        displayName: 'S3 Bucket',
+        name: 'bucket',
+        type: 'string',
+        default: '',
+        description: 'Bucket where cache objects are stored',
+        noDataExpression: true,
+      },
+      {
+        displayName: 'Path Prefix',
+        name: 'cacheDir',
+        type: 'string',
+        default: 'smartcache',
+        description: 'Prefix for object keys inside the S3 bucket (e.g., $smartcache)',
+        noDataExpression: true,
+      },
       {
         displayName: 'Batch Mode',
         name: 'batchMode',
@@ -276,15 +310,6 @@ export class SmartCache implements INodeType {
         default: 24,
         description: 'Time-to-live for cache entries in hours. Use 0 for infinite.',
       },
-      {
-        displayName: 'Cache Directory',
-        name: 'cacheDir',
-        type: 'string',
-        default: '/tmp/n8n-smartcache',
-        description:
-          'Directory where cache files will be stored. Must be writable by the n8n process.',
-        noDataExpression: true,
-      },
     ],
   }
 
@@ -295,6 +320,51 @@ export class SmartCache implements INodeType {
     const cacheKeyFields = (this.getNodeParameter('cacheKeyFields', 0) as string).trim()
     const batchMode = this.getNodeParameter('batchMode', 0) as boolean
     const context = this.getContext('node')
+    if (force) {
+      this.logger.warn('[SmartCache] Force Miss is enabled: cache reads will be bypassed and new objects will be written')
+    }
+    // Create S3 backend (credentials are required by node definition)
+    const creds = (await this.getCredentials('s3')) as unknown as {
+      accessKeyId: string
+      secretAccessKey: string
+      region: string
+      endpoint?: string
+      forcePathStyle?: boolean
+      ignoreSSL?: boolean
+    }
+    if (!creds) {
+      throw new NodeOperationError(this.getNode(), 'S3 credentials are required')
+    }
+    const bucket = (this.getNodeParameter('bucket', 0) as string).trim()
+    if (!bucket) {
+      throw new NodeOperationError(this.getNode(), 'S3 bucket is required')
+    }
+    const backend: CacheBackend = new S3Backend(
+      {
+        accessKeyId: String(creds.accessKeyId),
+        secretAccessKey: String(creds.secretAccessKey),
+        sessionToken: (creds as { sessionToken?: string }).sessionToken,
+        region: String(creds.region),
+        bucket,
+        endpoint: creds.endpoint ? String(creds.endpoint) : undefined,
+        forcePathStyle: creds.forcePathStyle,
+        ignoreSSL: creds.ignoreSSL,
+      },
+      this.logger,
+      this,
+    )
+
+    // Validate bucket exists early with a lightweight HEAD
+    try {
+      if (backend instanceof S3Backend) {
+        await backend.ensureBucketAccessible()
+      }
+    } catch (err) {
+      throw new NodeOperationError(
+        this.getNode(),
+        err instanceof Error ? err.message : String(err),
+      )
+    }
 
     const mainInput = this.getInputData(0) // Input 1
     const cacheInput = this.getInputData(1) // Input 2 (write)
@@ -302,8 +372,9 @@ export class SmartCache implements INodeType {
     this.logger.debug('[SmartCache] SmartCache initialized with parameters:', {
       force,
       ttl,
-      cacheDir,
+      cachePrefix: cacheDir,
       cacheKeyFields,
+      backend: backend.constructor.name,
     })
 
     // Early return if both inputs are empty
@@ -325,6 +396,7 @@ export class SmartCache implements INodeType {
             ttl,
             this.logger,
             nodeId,
+            backend,
           )
         : await Promise.all(
             mainInput.map((item) =>
@@ -337,6 +409,7 @@ export class SmartCache implements INodeType {
                 ttl,
                 this.logger,
                 nodeId,
+                backend,
               ),
             ),
           ).then((results) => ({
@@ -362,7 +435,14 @@ export class SmartCache implements INodeType {
           getItemIndex(firstItem.pairedItem) !== undefined,
           'Write input items must come from cache miss output',
         )
-        await writeToCacheFile(cacheInput, context, true)
+        try {
+          await writeToCache(cacheInput, context, backend)
+        } catch (err) {
+          throw new NodeOperationError(
+            this.getNode(),
+            `Failed to persist cache to S3: ${String(err instanceof Error ? err.message : err)}`,
+          )
+        }
         return [cacheInput, []]
       }
 
@@ -372,7 +452,14 @@ export class SmartCache implements INodeType {
           getItemIndex(item.pairedItem) !== undefined,
           'Write input items must come from cache miss output',
         )
-        await writeToCacheFile(item, context)
+        try {
+          await writeToCache(item, context, backend)
+        } catch (err) {
+          throw new NodeOperationError(
+            this.getNode(),
+            `Failed to persist cache to S3: ${String(err instanceof Error ? err.message : err)}`,
+          )
+        }
         results.push(item)
       }
 

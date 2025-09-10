@@ -13,7 +13,8 @@
       "parameters": {
         "cacheKeyFields": "prompt,style",
         "ttl": 0,
-        "cacheDir": "/tmp/n8n-cache/images"
+        "bucket": "my-bucket",
+        "cacheDir": "$smartcache/images"
       },
       "name": "SmartCache",
       "type": "n8n-nodes-smartcache.smartCache",

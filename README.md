@@ -145,11 +145,16 @@ This node is not yet verified for n8n Cloud. Please use a self-hosted n8n instan
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
+| **S3 Bucket** | String | "" | Bucket where cache objects are stored |
+| **Path Prefix** | String | `$smartcache` | Prefix used for keys inside the bucket |
 | **Batch Mode** | Boolean | false | Whether to process all input items as a single unit |
 | **Force Miss** | Boolean | false | Whether to force cache miss and regenerate data |
 | **Cache Key Fields** | String | "" | Comma-separated fields for cache key (empty = all fields) |
 | **TTL (Hours)** | Number | 24 | Cache expiration time (0 = infinite) |
-| **Cache Directory** | String | `/tmp/n8n-smartcache` | Directory to store cache files |
+
+Note on persistence:
+- SmartCache requires the built-in "S3" credential and persists to your S3-compatible bucket using the provided Path Prefix.
+  - For self-hosted or S3-compatible services with self-signed certificates, enable "Ignore SSL" in your S3 credential, or use an HTTP endpoint if appropriate.
 
 ### Input/Output Design
 
@@ -281,7 +286,7 @@ SmartCache generates unique cache keys using:
 
 **Cache not working:**
 
-- Verify cache directory exists and is writable
+- When using S3, ensure the bucket exists and your IAM user has `s3:HeadObject`, `s3:GetObject`, and `s3:PutObject` permissions for the chosen prefix
 - Check that input data structure is consistent
 - Ensure node ID remains stable across executions
 
@@ -289,19 +294,19 @@ SmartCache generates unique cache keys using:
 
 - Consider using `cacheKeyFields` to limit cache key data
 - Implement cache cleanup for old files
-- Monitor cache directory size
+- For persistent S3 caches, consider enabling TTL to limit object growth
 
 **Permission errors:**
 
-- Ensure n8n process has read/write access to cache directory
-- Use absolute paths for cache directory
+- Ensure S3 credentials are valid and region/endpoint are correct
+- Use a distinct prefix per environment or workflow to avoid collisions
 
 ## 📈 Monitoring & Analytics
 
 SmartCache provides detailed logging:
 
 ```
-[SmartCache] Generated cache metadata: {cacheKey: "abc123", cachePath: "/tmp/cache/abc123.cache"}
+[SmartCache] Generated cache metadata: {cacheKey: "abc123", cachePath: "$smartcache/abc123.cache"}
 [SmartCache] Cache hit: {cacheKey: "abc123", cacheAge: 2.5}
 [SmartCache] Cache miss: {cacheKey: "def456", reason: "File not found"}
 [SmartCache] Finished processing: {totalItems: 10, cacheHits: 8, cacheMisses: 2}

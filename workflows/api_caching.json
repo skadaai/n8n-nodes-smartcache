@@ -22,9 +22,10 @@
     },
     {
       "parameters": {
-        "force": true,
+        "force": false,
         "cacheKeyFields": "id",
-        "cacheDir": "/tmp/n8n-cache/dynamic-api-calls"
+        "bucket": "my-bucket",
+        "cacheDir": "$smartcache/dynamic-api-calls"
       },
       "name": "SmartCache",
       "type": "n8n-nodes-smartcache.smartCache",
