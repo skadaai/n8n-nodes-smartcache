@@ -47,7 +47,7 @@ const processItemData = (item: INodeExecutionData, cacheKeyFields: string) =>
           acc[field.trim()] = item.json[field.trim()]
           return acc
         },
-        {} as Record<string, any>,
+        {} as Record<string, unknown>,
       )
     : item.json
 
@@ -71,7 +71,7 @@ const generateCacheMetadata = (
               acc[key] = item[key]
               return acc
             },
-            {} as Record<string, any>,
+            {} as Record<string, unknown>,
           ),
       )
     : Object.keys(dataToHash)
@@ -81,7 +81,7 @@ const generateCacheMetadata = (
             acc[key] = dataToHash[key]
             return acc
           },
-          {} as Record<string, any>,
+          {} as Record<string, unknown>,
         )
 
   // Include nodeId in hash generation to separate caches for different node instances
