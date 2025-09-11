@@ -7,7 +7,6 @@
  */
 
 import { createHash } from 'node:crypto'
-import { strict as assert } from 'node:assert'
 import {
   IContextObject,
   IExecuteFunctions,
@@ -16,6 +15,7 @@ import {
   INodeTypeDescription,
   NodeConnectionType,
   NodeOperationError,
+  ApplicationError,
 } from 'n8n-workflow'
 
 import { CacheBackend, S3Backend, joinPrefix } from './storage'
@@ -29,15 +29,21 @@ const getItemIndex = (pairedItem: INodeExecutionData['pairedItem']): number => {
     return pairedItem?.item ?? 0
   }
 
-  assert(pairedItem, 'PairedItem index cannot be undefined')
-  return pairedItem
+  if (pairedItem === undefined || pairedItem === null) {
+    throw new ApplicationError('PairedItem index cannot be undefined')
+  }
+  return pairedItem as number
 }
 
 const getCachePathFromItem = (item: INodeExecutionData, context: IContextObject) => {
   const ctx = context[getItemIndex(item.pairedItem)]
-  assert(ctx, 'Context not found in input data')
+  if (!ctx) {
+    throw new ApplicationError('Context not found in input data')
+  }
   const cachePath = ctx.cachePath
-  assert(cachePath, 'Cache path not found in input data')
+  if (!cachePath) {
+    throw new ApplicationError('Cache path not found in input data')
+  }
   return cachePath
 }
 
@@ -104,9 +110,13 @@ const writeToCache = async (
 ) => {
   // If array, any item serves as they all share the same $smartcache object
   const firstItem = Array.isArray(items) ? items[0] : items
-  assert(firstItem, 'Items cannot be empty')
+  if (!firstItem) {
+    throw new ApplicationError('Items cannot be empty')
+  }
   const cachePath = getCachePathFromItem(firstItem, context)
-  assert(backend, 'Cache backend not available')
+  if (!backend) {
+    throw new ApplicationError('Cache backend not available')
+  }
   await backend.put(cachePath, items)
   console.debug(`[SmartCache] Wrote to cache at ${cachePath}`)
 }
@@ -430,11 +440,15 @@ export class SmartCache implements INodeType {
     if (cacheInput.length > 0) {
       if (batchMode) {
         const firstItem = cacheInput[0]
-        assert(firstItem, 'Cache input cannot be empty')
-        assert(
-          getItemIndex(firstItem.pairedItem) !== undefined,
-          'Write input items must come from cache miss output',
-        )
+        if (!firstItem) {
+          throw new NodeOperationError(this.getNode(), 'Cache input cannot be empty')
+        }
+        if (getItemIndex(firstItem.pairedItem) === undefined) {
+          throw new NodeOperationError(
+            this.getNode(),
+            'Write input items must come from cache miss output',
+          )
+        }
         try {
           await writeToCache(cacheInput, context, backend)
         } catch (err) {
@@ -448,10 +462,12 @@ export class SmartCache implements INodeType {
 
       const results: INodeExecutionData[] = []
       for (const item of cacheInput) {
-        assert(
-          getItemIndex(item.pairedItem) !== undefined,
-          'Write input items must come from cache miss output',
-        )
+        if (getItemIndex(item.pairedItem) === undefined) {
+          throw new NodeOperationError(
+            this.getNode(),
+            'Write input items must come from cache miss output',
+          )
+        }
         try {
           await writeToCache(item, context, backend)
         } catch (err) {
